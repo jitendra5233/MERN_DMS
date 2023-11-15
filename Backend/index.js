@@ -22,7 +22,7 @@ const CompanyAccount = require("./Model/CompanyAccount");
 const sendMail = require("./controllers/sendMail");
 const sendMailForSignup = require("./controllers/sendMailForSignup");
 const sendOtp = require("./controllers/sendOtp");
-const sendMailForRequestInventory =require('./controllers/sendMailForRequestInventory');
+const sendMailForRequestInventory = require("./controllers/sendMailForRequestInventory");
 
 const CandidateDetailsSchema = require("./Model/CandidateDetails");
 const moment = require("moment");
@@ -39,7 +39,8 @@ const EnventoryRepair = require("./Model/EnventoryRepair");
 const EnventoryCategory = require("./Model/EnventoryCategory");
 const RepairRecord = require("./Model/RepairRecord");
 const IssuesAndFeedbackInner = require("./Model/IssuesAndFeedbackInner");
-const KpiQuestion =require('./Model/KpiQuestion');
+const KpiQuestion = require("./Model/KpiQuestion");
+const AdminKpiQustion = require("./Model/AdminKpiQustion");
 const singleUpload = upload.single("image");
 const docUpload = upload.single("file");
 
@@ -835,34 +836,38 @@ app.post("/generateLogin", async (req, res) => {
 
 // jitender's code
 
-
 app.post("/sendMailForRequestInventory", async (req, res) => {
-  let { smtpHost, smtpPort, smtpUsername, smtpPassword ,emp_name,
+  let {
+    smtpHost,
+    smtpPort,
+    smtpUsername,
+    smtpPassword,
+    emp_name,
     emp_code,
     job_title,
     item_name,
     quantity,
-    request_date
+    request_date,
   } = req.body;
-  
+
   try {
-     await sendMailForRequestInventory(
-        "Techies Infotech",
-        "jitendra.techies@gmail.com",
-        "jitendra.singh@iamtechie.com",
-        "hosting_name",
-        "renewal_date",
-        "client_name",
-        smtpHost,
-        smtpPort,
-        smtpUsername,
-        smtpPassword,
-        emp_name,
-        emp_code,
-        job_title,
-        item_name,
-        quantity,
-        request_date
+    await sendMailForRequestInventory(
+      "Techies Infotech",
+      "jitendra.techies@gmail.com",
+      "jitendra.singh@iamtechie.com",
+      "hosting_name",
+      "renewal_date",
+      "client_name",
+      smtpHost,
+      smtpPort,
+      smtpUsername,
+      smtpPassword,
+      emp_name,
+      emp_code,
+      job_title,
+      item_name,
+      quantity,
+      request_date
     );
 
     res.status(200).json(true);
@@ -870,10 +875,6 @@ app.post("/sendMailForRequestInventory", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
-
-
-
-
 
 app.post("/create_expense", async (req, res) => {
   try {
@@ -1604,8 +1605,6 @@ app.post("/assignedHosting", async (req, res) => {
   }
 });
 
-
-
 app.post("/assignedsocialmedia", async (req, res) => {
   try {
     const {
@@ -1649,7 +1648,6 @@ app.post("/assignedsocialmedia", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
-
 
 app.post("/GetassignedHosting", async (req, res) => {
   try {
@@ -1745,7 +1743,6 @@ app.post("/create_clientAccount", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
-
 
 app.get("/getAccountDetails", async (req, res) => {
   try {
@@ -2499,7 +2496,7 @@ app.post("/update_password", async (req, res) => {
 
 app.post("/usresdata", async (req, res) => {
   try {
-    const id  = req.body.empId;
+    const id = req.body.empId;
     const user = await EmployeeSchema.findOne({ _id: id });
     res.status(200).json(user);
 
@@ -2855,88 +2852,354 @@ app.get("/getItemCategory", async (req, res) => {
   }
 });
 
+// app.post("/create_KPI", async (req, res) => {
+//   try {
+//     const { emp_id, months, month, kpiQuestions } = req.body;
+//     const existingKpiQuestion = await KpiQuestion.findOne({
+//       months: month,
+//       emp_id,
+//     });
+
+//     const newSocialIcons = kpiQuestions.map((x) => ({
+//       question: x,
+//       rating: 1,
+//       comment: "",
+//       r_rating: 1,
+//       r_comment: "",
+//     }));
+
+//     if (existingKpiQuestion) {
+//       // If KPI questions for the specified month and employee exist, update the existing questions.
+//       existingKpiQuestion.kpiQuestions =
+//         existingKpiQuestion.kpiQuestions.concat(newSocialIcons);
+//       await existingKpiQuestion.save();
+
+//       res.status(200).json({ status: true, kpiQuestion: existingKpiQuestion });
+//     } else {
+//       // If KPI questions for the specified month and employee don't exist, create a new entry.
+//       if (month !== "") {
+//         // If 'month' is provided, create a new KpiQuestion with that specific month.
+//         const newKpiQuestion = await KpiQuestion.create({
+//           emp_id,
+//           months: month,
+//           e_collaboration: "",
+//           e_commitment: "",
+//           e_integrity: "",
+//           e_quality: "",
+//           r_collaboration: "",
+//           r_commitment: "",
+//           r_integrity: "",
+//           r_quality: "",
+//           e_assesment: "",
+//           r_assesment: "",
+//           e_assesment1: "",
+//           r_assesment1: "",
+//           Reviewer_upadate_date: "NA",
+//           Emp_upadate_date: "NA",
+//           kpiQuestions: newSocialIcons,
+//         });
+
+//         res.status(200).json({ status: true, kpiQuestion: newKpiQuestion });
+//       } else {
+//         // If 'month' is not provided, create a KpiQuestion entry for each month in the 'months' array.
+//         for (let i = 0; i < months.length; i++) {
+//           if (months[i] !== "") {
+//             const existingKpiQuestion = await KpiQuestion.findOne({
+//               months: months[i],
+//               emp_id,
+//             });
+
+//             if (existingKpiQuestion) {
+//               // If KPI questions for the specified month and employee exist, add new questions to it.
+//               existingKpiQuestion.kpiQuestions.push(...newSocialIcons);
+//               await existingKpiQuestion.save();
+//             } else {
+//               // If KPI questions for the specified month and employee don't exist, create a new entry for that month.
+//               const newKpiQuestion = await KpiQuestion.create({
+//                 emp_id,
+//                 months: months[i],
+//                 e_collaboration: "",
+//                 e_commitment: "",
+//                 e_integrity: "",
+//                 e_quality: "",
+//                 r_collaboration: "",
+//                 r_commitment: "",
+//                 r_integrity: "",
+//                 r_quality: "",
+//                 e_assesment: "",
+//                 r_assesment: "",
+//                 e_assesment1: "",
+//                 r_assesment1: "",
+//                 Reviewer_upadate_date: "NA",
+//                 Emp_upadate_date: "NA",
+//                 kpiQuestions: newSocialIcons,
+//               });
+//             }
+//           }
+//         }
+
+//         res.status(200).json({ status: true });
+//       }
+//     }
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({
+//       message: "An error occurred while creating KPI.",
+//       error: err.message,
+//     });
+//   }
+// });
+
 app.post("/create_KPI", async (req, res) => {
   try {
-    const { emp_id, months, socialIcons } = req.body;
-    const existingKpiQuestion = await KpiQuestion.findOne({ months, emp_id });
+    const { emp_id, months, month, kpiQuestions } = req.body;
+    const newSocialIcons = kpiQuestions.map((x) => ({
+      question: x,
+      rating: 1,
+      comment: "",
+      r_rating: 1,
+      r_comment: "",
+    }));
+
+    if (month !== "") {
+      // If 'month' is provided, update the existing KpiQuestion for that specific month.
+      const existingKpiQuestion = await KpiQuestion.findOne({
+        months: month,
+        emp_id,
+      });
+
+      if (existingKpiQuestion) {
+        // If KPI questions for the specified month and employee exist, update the existing questions.
+        existingKpiQuestion.kpiQuestions =
+          existingKpiQuestion.kpiQuestions.concat(newSocialIcons);
+        await existingKpiQuestion.save();
+
+        res
+          .status(200)
+          .json({ status: true, kpiQuestion: existingKpiQuestion });
+      } else {
+        // If KPI questions for the specified month and employee don't exist, create a new entry.
+        const newKpiQuestion = await KpiQuestion.create({
+          emp_id,
+          months: month,
+          e_collaboration: "",
+          e_commitment: "",
+          e_integrity: "",
+          e_quality: "",
+          r_collaboration: "",
+          r_commitment: "",
+          r_integrity: "",
+          r_quality: "",
+          e_assesment: "",
+          r_assesment: "",
+          e_assesment1: "",
+          r_assesment1: "",
+          Reviewer_upadate_date: "NA",
+          Emp_upadate_date: "NA",
+          kpiQuestions: newSocialIcons,
+        });
+
+        res.status(200).json({ status: true, kpiQuestion: newKpiQuestion });
+      }
+    } else {
+      // If 'month' is not provided, create a KpiQuestion entry for each month in the 'months' array in parallel.
+      const promises = months.map(async (m) => {
+        if (m !== "") {
+          const existingKpiQuestion = await KpiQuestion.findOne({
+            months: m,
+            emp_id,
+          });
+
+          if (existingKpiQuestion) {
+            // If KPI questions for the specified month and employee exist, add new questions to it.
+            existingKpiQuestion.kpiQuestions =
+              existingKpiQuestion.kpiQuestions.concat(newSocialIcons);
+            await existingKpiQuestion.save();
+          } else {
+            // If KPI questions for the specified month and employee don't exist, create a new entry for that month.
+            const newKpiQuestion = await KpiQuestion.create({
+              emp_id,
+              months: m,
+              e_collaboration: "",
+              e_commitment: "",
+              e_integrity: "",
+              e_quality: "",
+              r_collaboration: "",
+              r_commitment: "",
+              r_integrity: "",
+              r_quality: "",
+              e_assesment: "",
+              r_assesment: "",
+              e_assesment1: "",
+              r_assesment1: "",
+              Reviewer_upadate_date: "NA",
+              Emp_upadate_date: "NA",
+              kpiQuestions: newSocialIcons,
+            });
+          }
+        }
+      });
+
+      // Wait for all insertions to complete and then send the response.
+      await Promise.all(promises);
+      res.status(200).json({ status: true });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      message: "An error occurred while creating KPI.",
+      error: err.message,
+    });
+  }
+});
+
+app.post("/create_admin_KPI", async (req, res) => {
+  try {
+    const { department_id, department, socialIcons } = req.body;
+    const existingKpiQuestion = await AdminKpiQustion.findOne({
+      department_id,
+    });
     if (existingKpiQuestion) {
-      const newSocialIcons = socialIcons.map(icon => ({ question: icon.qusetion, rating:1, comment:'', r_rating:1, r_comment:''}));
+      const newSocialIcons = socialIcons.map((icon) => ({
+        question: icon.qusetion,
+        rating: 1,
+        comment: "",
+        r_rating: 1,
+        r_comment: "",
+      }));
       existingKpiQuestion.kpiQuestions.push(...newSocialIcons);
       await existingKpiQuestion.save();
 
       res.status(200).json({ status: true, kpiQuestion: existingKpiQuestion });
     } else {
-      const newSocialIcons = socialIcons.map(icon => ({ question: icon.qusetion, rating:1, comment:'', r_rating:1, r_comment:'' }));
-      const newKpiQuestion = await KpiQuestion.create({
-        emp_id,
-        months,
-        e_collaboration:'',
-        e_commitment:'',
-        e_integrity:'',
-        e_quality:'',
-        r_collaboration:'',
-        r_commitment:'',
-        r_integrity:'',
-        r_quality:'',
-        e_assesment:'',
-        r_assesment:'',
-        e_assesment1:'',
-        r_assesment1:'',
-        Reviewer_upadate_date:'NA',
-        Emp_upadate_date:'NA',
-        kpiQuestions: newSocialIcons
+      const newSocialIcons = socialIcons.map((icon) => ({
+        question: icon.qusetion,
+        rating: 1,
+        comment: "",
+        r_rating: 1,
+        r_comment: "",
+      }));
+      const newKpiQuestion = await AdminKpiQustion.create({
+        department_id,
+        department,
+        kpiQuestions: newSocialIcons,
       });
 
       res.status(200).json({ status: true, kpiQuestion: newKpiQuestion });
     }
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "An error occurred while creating KPI.", error: err.message });
+    res.status(500).json({
+      message: "An error occurred while creating KPI.",
+      error: err.message,
+    });
   }
 });
-
 
 app.get("/getApiQuestion/:emp_id/:kpiMonths", async (req, res) => {
   try {
     const emp_id = req.params.emp_id;
     const kpiMonths = req.params.kpiMonths;
-    const apiQuestion = await KpiQuestion.find({emp_id:emp_id, months: kpiMonths });
+
+    const apiQuestion = await KpiQuestion.find({
+      emp_id: emp_id,
+      months: kpiMonths,
+    });
 
     res.status(200).json(apiQuestion);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "An error occurred while fetching API question.", error: err.message });
+    res.status(500).json({
+      message: "An error occurred while fetching API question.",
+      error: err.message,
+    });
   }
 });
 
+// app.get("/getApiQuestionEmp/:EmpId/:kpiMonths", async (req, res) => {
+//   try {
+//     const { EmpId, kpiMonths } = req.params;
+
+//     if (!EmpId || !kpiMonths) {
+//       return res.status(400).json({ message: "Missing required parameters." });
+//     }
+
+//     let checkEmp = await EmployeeSchema.findOne({ _id: EmpId });
+
+//     if (!checkEmp) {
+//       checkEmp = await CandidateDetails.findOne({ _id: EmpId });
+//     }
+
+//     if (checkEmp) {
+//       const getdocs = await CandidateDetails.findOne({
+//         ref_id: checkEmp.ref_id,
+//       });
+//       if (getdocs) {
+//         const apiQuestion = await KpiQuestion.find({
+//           emp_id: getdocs.ref_id,
+//           months: kpiMonths,
+//         });
+//         res.status(200).json(apiQuestion);
+//       } else {
+//         res.status(404).json({ message: "Candidate details not found." });
+//       }
+//     } else {
+//       res.status(404).json({ message: "Employee not found." });
+//     }
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({
+//       message: "An error occurred while fetching API question.",
+//       error: err.message,
+//     });
+//   }
+// });
 app.get("/getApiQuestionEmp/:EmpId/:kpiMonths", async (req, res) => {
   try {
     const { EmpId, kpiMonths } = req.params;
-
     if (!EmpId || !kpiMonths) {
       return res.status(400).json({ message: "Missing required parameters." });
     }
-    
-    const checkEmp = await EmployeeSchema.findOne({_id: EmpId });
+    const apiQuestion = await KpiQuestion.find({
+      emp_id: EmpId,
+      months: kpiMonths,
+    });
+    // let checkEmp = await EmployeeSchema.findOne({ _id: EmpId });
+    // console.log("EmployeeSchema result:", checkEmp);
 
-    if (checkEmp) {
-      const getdocs = await CandidateDetails.findOne({ref_id:checkEmp.ref_id});
+    // if (!checkEmp) {
+    //   checkEmp = await CandidateDetails.findOne({ _id: EmpId });
+    // }
 
-      if (getdocs) {
-        const apiQuestion = await KpiQuestion.find({ emp_id: getdocs._id, months: kpiMonths });
-        res.status(200).json(apiQuestion);
-      } else {
-        res.status(404).json({ message: "Candidate details not found." });
-      }
-    } else {
-      res.status(404).json({ message: "Employee not found." });
-    }
+    // console.log("CandidateDetails result:", checkEmp);
+
+    // if (checkEmp) {
+    //   const getdocs = await CandidateDetails.findOne({
+    //     ref_id: checkEmp.ref_id,
+    //   });
+    //   if (getdocs) {
+    //     const apiQuestion = await KpiQuestion.find({
+    //       emp_id: getdocs.ref_id,
+    //       months: kpiMonths,
+    //     });
+
+    //     console.log("apiQuestion result:", apiQuestion);
+
+    res.status(200).json(apiQuestion);
+    //   } else {
+    //     res.status(404).json({ message: "Candidate details not found." });
+    //   }
+    // } else {
+    //   res.status(404).json({ message: "Employee not found." });
+    // }
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "An error occurred while fetching API question.", error: err.message });
+    res.status(500).json({
+      message: "An error occurred while fetching API question.",
+      error: err.message,
+    });
   }
 });
-
 
 app.get("/issuedEmpItem/:EmpId", async (req, res) => {
   try {
@@ -2945,16 +3208,19 @@ app.get("/issuedEmpItem/:EmpId", async (req, res) => {
     if (!EmpId) {
       return res.status(400).json({ message: "Missing required parameters." });
     }
-    
+
     const checkEmp = await EmployeeSchema.findById(EmpId);
 
     if (checkEmp) {
-      const getdocs = await CandidateDetails.findOne({ ref_id: checkEmp.ref_id });
-      
+      const getdocs = await CandidateDetails.findOne({
+        ref_id: checkEmp.ref_id,
+      });
+
       if (getdocs) {
-        const enventory = await Enventory.find({ emp_id: getdocs._id })
-          .sort({ createdAt: -1 });
-          
+        const enventory = await Enventory.find({ emp_id: getdocs._id }).sort({
+          createdAt: -1,
+        });
+
         res.status(200).json(enventory);
       } else {
         res.status(404).json({ message: "Candidate details not found." });
@@ -2964,93 +3230,105 @@ app.get("/issuedEmpItem/:EmpId", async (req, res) => {
     }
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "An error occurred while fetching employee items.", error: err.message });
+    res.status(500).json({
+      message: "An error occurred while fetching employee items.",
+      error: err.message,
+    });
   }
 });
 
-app.delete(
-  "/delete_kpi_question/:kpiId/:questionId",
-  async (req, res) => {
-    try {
-      const KpiId = req.params.kpiId;
-      const QuestionId = req.params.questionId;
-      const Kpi = await KpiQuestion.findById(KpiId);
-      if (!Kpi) {
-        return res.status(404).json({ message: "KPI Id not found" });
-      }
-      Kpi.kpiQuestions = Kpi.kpiQuestions.filter(
-        (item) => item._id.toString() !== QuestionId
-      );
-      await Kpi.save();
-      res.status(200).json({ message: "Question is  deleted successfully" });
-    } catch (error) {
-      res.status(500).json({ message: error.message });
+app.delete("/delete_kpi_question/:kpiId/:questionId", async (req, res) => {
+  try {
+    const KpiId = req.params.kpiId;
+    const QuestionId = req.params.questionId;
+    const Kpi = await KpiQuestion.findById(KpiId);
+    if (!Kpi) {
+      return res.status(404).json({ message: "KPI Id not found" });
     }
+    Kpi.kpiQuestions = Kpi.kpiQuestions.filter(
+      (item) => item._id.toString() !== QuestionId
+    );
+    await Kpi.save();
+    res.status(200).json({ message: "Question is  deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
-);
+});
 
-app.post('/updatecomment', async (req, res) => {
-  const { r_rating, r_comment, EmpId, itemId } = req.body;
+app.post("/updatecomment", async (req, res) => {
+  const { r_rating, r_comment, id, itemId } = req.body;
 
   try {
-    const docs = await KpiQuestion.find({ emp_id: EmpId });
+    const docs = await KpiQuestion.find({ emp_id: id });
 
     if (!docs || docs.length === 0) {
-      return res.status(404).json({ success: false, message: 'Documents not found' });
+      return res
+        .status(404)
+        .json({ success: false, message: "Documents not found" });
     }
 
     for (const doc of docs) {
       if (!doc.kpiQuestions) {
-        console.error('kpiQuestions array is missing in the document:', doc);
-        return res.status(500).json({ success: false, message: 'kpiQuestions array is missing in the document' });
+        console.error("kpiQuestions array is missing in the document:", doc);
+        return res.status(500).json({
+          success: false,
+          message: "kpiQuestions array is missing in the document",
+        });
       }
 
-      const updatedKpiQuestions = doc.kpiQuestions.map(question => {
+      const updatedKpiQuestions = doc.kpiQuestions.map((question) => {
         if (question._id.toString() === itemId) {
           return {
             ...question,
             r_rating,
             r_comment,
-            rating: question.rating, 
-            comment: question.comment 
+            rating: question.rating,
+            comment: question.comment,
           };
         }
         return question;
       });
 
       doc.kpiQuestions = updatedKpiQuestions;
-      await doc.save(); 
-
-      console.log(`Updated document ${doc._id}`);
+      await doc.save();
     }
 
-    res.json({ success: true, message: 'Comment and rating updated successfully' });
+    res.json({
+      success: true,
+      message: "Comment and rating updated successfully",
+    });
   } catch (error) {
-    console.error('Error updating comment and rating:', error);
-    return res.status(500).json({ success: false, message: 'An error occurred while updating the document', error: error.message });
+    console.error("Error updating comment and rating:", error);
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while updating the document",
+      error: error.message,
+    });
   }
 });
 
-
-
-
-app.post('/updatecommentEmp', async (req, res) => {
+app.post("/updatecommentEmp", async (req, res) => {
   const { rating, comment, updateId, itemId } = req.body;
 
   try {
-    const docs = await KpiQuestion.find({_id: updateId });
+    const docs = await KpiQuestion.find({ _id: updateId });
 
     if (!docs || docs.length === 0) {
-      return res.status(404).json({ success: false, message: 'Documents not found' });
+      return res
+        .status(404)
+        .json({ success: false, message: "Documents not found" });
     }
 
     for (const doc of docs) {
       if (!doc.kpiQuestions) {
-        console.error('kpiQuestions array is missing in the document:', doc);
-        return res.status(500).json({ success: false, message: 'kpiQuestions array is missing in the document' });
+        console.error("kpiQuestions array is missing in the document:", doc);
+        return res.status(500).json({
+          success: false,
+          message: "kpiQuestions array is missing in the document",
+        });
       }
 
-      const updatedKpiQuestions = doc.kpiQuestions.map(question => {
+      const updatedKpiQuestions = doc.kpiQuestions.map((question) => {
         if (question._id.toString() === itemId) {
           return {
             ...question,
@@ -3067,17 +3345,38 @@ app.post('/updatecommentEmp', async (req, res) => {
       console.log(`Updated document ${doc._id}`);
     }
 
-    res.json({ success: true, message: 'Comment and rating updated successfully' });
+    res.json({
+      success: true,
+      message: "Comment and rating updated successfully",
+    });
   } catch (error) {
-    console.error('Error updating comment and rating:', error);
-    return res.status(500).json({ success: false, message: 'An error occurred while updating the document', error: error.message });
+    console.error("Error updating comment and rating:", error);
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while updating the document",
+      error: error.message,
+    });
   }
 });
 
-
-app.post('/updatecompanyValue', async (req, res) => {
-  const { emp_id, months, e_collaboration, e_commitment, e_integrity, e_quality,
-    r_collaboration, r_commitment, r_integrity, r_quality,e_assesment,r_assesment,e_assesment1,r_assesment1,Reviewer_upadate_date } = req.body;
+app.post("/updatecompanyValue", async (req, res) => {
+  const {
+    emp_id,
+    months,
+    e_collaboration,
+    e_commitment,
+    e_integrity,
+    e_quality,
+    r_collaboration,
+    r_commitment,
+    r_integrity,
+    r_quality,
+    e_assesment,
+    r_assesment,
+    e_assesment1,
+    r_assesment1,
+    Reviewer_upadate_date,
+  } = req.body;
 
   const newData = {
     e_collaboration,
@@ -3092,7 +3391,7 @@ app.post('/updatecompanyValue', async (req, res) => {
     r_assesment,
     e_assesment1,
     r_assesment1,
-    Reviewer_upadate_date
+    Reviewer_upadate_date,
   };
 
   try {
@@ -3101,20 +3400,35 @@ app.post('/updatecompanyValue', async (req, res) => {
       { $set: newData }
     );
     console.log(`Updated document ${docs._id}`);
-    res.json({ success: true, message: 'Data updated successfully' });
+    res.json({ success: true, message: "Data updated successfully" });
   } catch (error) {
-    console.error('Error updating data:', error);
-    res.status(500).json({ success: false, message: 'An error occurred while updating the data', error: error.message });
+    console.error("Error updating data:", error);
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while updating the data",
+      error: error.message,
+    });
   }
 });
 
-app.post('/updatecompanyValueEmp', async (req, res) => {
-  const { emp_id, months, e_collaboration, e_commitment, e_integrity, e_quality,
-    r_collaboration, r_commitment, r_integrity, r_quality,e_assesment,
+app.post("/updatecompanyValueEmp", async (req, res) => {
+  const {
+    emp_id,
+    months,
+    e_collaboration,
+    e_commitment,
+    e_integrity,
+    e_quality,
+    r_collaboration,
+    r_commitment,
+    r_integrity,
+    r_quality,
+    e_assesment,
     r_assesment,
     e_assesment1,
     r_assesment1,
-    Emp_upadate_date } = req.body;
+    Emp_upadate_date,
+  } = req.body;
 
   const newData = {
     e_collaboration,
@@ -3129,7 +3443,7 @@ app.post('/updatecompanyValueEmp', async (req, res) => {
     r_assesment,
     e_assesment1,
     r_assesment1,
-    Emp_upadate_date
+    Emp_upadate_date,
   };
 
   try {
@@ -3137,19 +3451,40 @@ app.post('/updatecompanyValueEmp', async (req, res) => {
       { _id: emp_id, months: months },
       { $set: newData }
     );
-    console.log(`Updated document ${docs._id}`);
-    res.json({ success: true, message: 'Data updated successfully' });
+    res.json({ success: true, message: "Data updated successfully" });
   } catch (error) {
-    console.error('Error updating data:', error);
-    res.status(500).json({ success: false, message: 'An error occurred while updating the data', error: error.message });
+    console.error("Error updating data:", error);
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while updating the data",
+      error: error.message,
+    });
   }
 });
 
+app.get("/getAdminApiQuestion/:department_id", async (req, res) => {
+  try {
+    const department_id = req.params.department_id;
+    const apiQuestion = await AdminKpiQustion.find({
+      department_id: department_id,
+    });
 
+    res.status(200).json(apiQuestion);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      message: "An error occurred while fetching API question.",
+      error: err.message,
+    });
+  }
+});
 
-
-
-
-
-
-
+app.get("/getEmployeeDepartment/:department", async (req, res) => {
+  try {
+    const department = req.params.department; // Use req.params.department
+    const doc = await CandidateDetails.find({ department: department });
+    res.status(200).json(doc);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});

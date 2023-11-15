@@ -38,7 +38,9 @@ const PostionCard = ({
   const handlelinkOpen = (slug1, slug2) => {
     navigate("/show-candidate/" + slug1 + "/" + slug2);
   };
+  
 
+  
   return (
     <div>
       <Card
@@ -302,6 +304,7 @@ const ShowPostions = () => {
                           className="myAntIpt2"
                           placeholder="Ex. 10"
                           size="small"
+                          type="number"
                         />
                       </Form.Item>
                     </Col>
@@ -321,6 +324,7 @@ const ShowPostions = () => {
                           className="myAntIpt2"
                           placeholder="Enter your Experience Required"
                           size="small"
+                          maxLength={9}
                         />
                       </Form.Item>
                     </Col>
@@ -340,6 +344,7 @@ const ShowPostions = () => {
                           className="myAntIpt2"
                           placeholder="Enter your Hiring Status"
                           size="small"
+                          maxLength={13}
                         />
                       </Form.Item>
                     </Col>
@@ -378,6 +383,7 @@ const ShowPostions = () => {
                           className="myAntIpt2"
                           placeholder="Enter your Location"
                           size="small"
+                          
                         />
                       </Form.Item>
                     </Col>

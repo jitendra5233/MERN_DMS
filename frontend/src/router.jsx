@@ -66,6 +66,8 @@ import ShowAllAssignedSocialMedia from "./Pages/Clients/ShowAllAssignedSocialMed
 import ShowEnventoryRepair from "./Pages/Enventory/ShowEnventoryRepair";
 import ShowEnventoryCategory from "./Pages/Enventory/ShowEnventoryCategory";
 import EmployeeKPI from "./Pages/Docs_Details/EmployeeKPI";
+import Admin_questionaire from "./Pages/Docs_Details/Admin_questionaire";
+import AssignKPIEMP from "./Pages/Docs_Details/AssignKPIEMP";
 
 const routerAdmin = createHashRouter(
   createRoutesFromElements(
@@ -135,6 +137,8 @@ const routerAdmin = createHashRouter(
         />
         <Route path="enventory_repair" element={<ShowEnventoryRepair />} />
         <Route path="enventory_category" element={<ShowEnventoryCategory />} />
+        <Route path="add_kpi" element={<Admin_questionaire />} />
+        <Route path="assign_kpi" element={<AssignKPIEMP />} />
       </Route>
     </Route>
   )
@@ -208,6 +212,7 @@ const routerHR = createHashRouter(
           element={<ShowAllAssignedSocialMedia />}
         />
         <Route path="enventory_repair" element={<ShowEnventoryRepair />} />
+        <Route path="assign_kpi" element={<AssignKPIEMP />} />
       </Route>
     </Route>
   )

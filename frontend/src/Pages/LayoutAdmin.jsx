@@ -11,6 +11,8 @@ import {
   LogoutOutlined,
   SettingOutlined,
   ShareAltOutlined,
+  BellOutlined,
+  CloseOutlined,
 } from "@ant-design/icons";
 import {
   Card,
@@ -32,6 +34,7 @@ import {
   Select,
   Space,
   Dropdown,
+  Drawer,
 } from "antd";
 import axios from "axios";
 import { useNavigate, Outlet, Link } from "react-router-dom";
@@ -54,14 +57,42 @@ const LayoutEmp = () => {
   const [loading, setLoading] = useState(false);
   const [userSuggestions, setUserSuggestions] = useState([]);
   const [userSuggestionsimg, setUserSuggestionsimg] = useState([]);
+  const [open, setOpen] = useState(false);
 
   const [empName, setEmpName] = useState([]);
   const [empDetails, setEmpDetails] = useState([]);
   const [empImgDetails, setEmpImgDetails] = useState([]);
-
-  console.log(empDetails);
+  const [removeItem, setremoveItem] = useState([
+    {
+      title: "Notification Heading 1",
+      subtitle: `Lorem ipsum dolor sit amet, consectetur
+      adipiscing elit, sed do eiusmod tempor
+      incididunt ut labore et dolore magna
+      aliqua`,
+    },
+    {
+      title: "Notification Heading 2",
+      subtitle: `Lorem ipsum dolor sit amet, consectetur
+      adipiscing elit, sed do eiusmod tempor
+      incididunt ut labore et dolore magna
+      aliqua`,
+    },
+  ]);
+  // console.log(empDetails);
 
   const { SubMenu } = Menu;
+
+  const deleteByValue = (value) => {
+    setremoveItem((oldValues) => {
+      return oldValues.filter((removeItem) => removeItem !== value);
+    });
+  };
+  const showDrawer = () => {
+    setOpen(true);
+  };
+  const onClose = () => {
+    setOpen(false);
+  };
 
   useEffect(() => {
     checkLogin();
@@ -338,13 +369,16 @@ const LayoutEmp = () => {
                 <Link to="/issued">Inventory Details</Link>
               </Menu.Item>
               <Menu.Item key="8">
-                <Link to="/loss_Damage">Lost/dameged</Link>
+                <Link to="/loss_Damage">Lost/Damaged</Link>
               </Menu.Item>
               <Menu.Item key="15">
                 <Link to="/enventory_repair">Inventory Repair</Link>
               </Menu.Item>
               <Menu.Item key="166">
                 <Link to="/enventory_category">Inventory Category</Link>
+              </Menu.Item>
+              <Menu.Item key="167">
+                <Link to="/inventory-item">Add Item</Link>
               </Menu.Item>
             </SubMenu>
             <SubMenu
@@ -368,6 +402,9 @@ const LayoutEmp = () => {
               </Menu.Item>
               <Menu.Item key="10">
                 <Link to="/show-old-employee">Old Employees</Link>
+              </Menu.Item>
+              <Menu.Item key="93">
+                <Link to="/add_kpi">Add Questionnaire (KPI)</Link>
               </Menu.Item>
             </SubMenu>
             <SubMenu
@@ -419,7 +456,7 @@ const LayoutEmp = () => {
                 <Link to="/employee-message">Employee message</Link>
               </Menu.Item>
               <Menu.Item key="16">
-                <Link to="/all-message">All message</Link>
+                <Link to="/all-message">All messages</Link>
               </Menu.Item>
             </SubMenu>
             <SubMenu
@@ -595,10 +632,47 @@ const LayoutEmp = () => {
                     className="h64p"
                     style={{ textAlign: "end", cursor: "pointer" }}
                   >
-                    <img
+                    {/* <img
                       style={{ width: "22px", margin: "22px  0" }}
                       src="./icon/bellicon.svg"
-                    />
+                    /> */}
+
+                    <Button
+                      type="primary"
+                      onClick={showDrawer}
+                      className="notify-btn"
+                    >
+                      <BellOutlined />
+                    </Button>
+                    <Drawer
+                      title="Notifications"
+                      placement="right"
+                      onClose={onClose}
+                      open={open}
+                    >
+                      <div className="cross">
+                        <div className="notify-box">
+                          <ul>
+                            {removeItem.map((removeItem) => {
+                              return (
+                                <li key={removeItem} className="list-set">
+                                  <div
+                                    onClick={() => deleteByValue(removeItem)}
+                                  >
+                                    <CloseOutlined />
+                                  </div>
+
+                                  <div>
+                                    <h2>{removeItem.title}</h2>
+                                    <p>{removeItem.subtitle}</p>
+                                  </div>
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        </div>
+                      </div>
+                    </Drawer>
                   </Col>
                   <Col span={4} className="h64p">
                     <Avatar

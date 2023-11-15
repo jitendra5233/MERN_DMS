@@ -97,7 +97,7 @@ const EmployeeCard = ({
         </div>
         <div style={{ margin: "20px 0" }}>
           <div>
-            <span className="potionCardTitle" style={{ cursor: "pointer" }}>
+            <span className="potionCardTitle" style={{ cursor: "pointer" }} onClick={() => openPage("/employee-details")}>
               {name}
             </span>
           </div>

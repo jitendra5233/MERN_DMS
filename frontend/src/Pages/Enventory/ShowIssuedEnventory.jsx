@@ -407,7 +407,7 @@ const ShowIssuedEnventory = () => {
                     >
                       <Input
                         className="myAntIpt2"
-                        placeholder="Enter  your Name Of item"
+                        placeholder="Enter your Name Of item"
                         size="small"
                         disabled
                       />
@@ -565,7 +565,7 @@ const ShowIssuedEnventory = () => {
         <div style={{ padding: "30px" }}>
           <Row>
             <Col span={24} style={{ marginBottom: "30px" }}>
-              <span className="popupTitle">Update Isuued Item</span>
+              <span className="popupTitle">Update Issued Item</span>
             </Col>
 
             <Col span={24}>

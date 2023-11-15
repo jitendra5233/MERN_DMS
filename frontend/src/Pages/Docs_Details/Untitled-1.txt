@@ -1,0 +1,80 @@
+{EmpRole == "admin" && (
+              <Row>
+                <Col span={24}>
+                  <Form
+                    form={form2}
+                    name="basic"
+                    layout="vertical"
+                    initialValues={{
+                      remember: true,
+                    }}
+                    onFinish={handleSaveQUES}
+                    onFinishFailed={onFinishFailed}
+                    autoComplete="off"
+                  >
+                    <Row gutter={24}>
+                      {socialIcons.map((item, index) => (
+                        <React.Fragment key={index}>
+                          <Col span={20}>
+                            <Form.Item
+                              label={`Question ${index + 1}`}
+                              name={["socialIcons", index, "qusetion"]}
+                              initialValue={item.social_url}
+                              hasFeedback
+                              rules={[
+                                {
+                                  required: true,
+                                  message: "Please input your qusetion",
+                                },
+                              ]}
+                            >
+                              <TextArea
+                                className="myAntIpt2"
+                                placeholder="Enter Question....."
+                                size="small"
+                              />
+                            </Form.Item>
+                          </Col>
+                          <Col span={4}>
+                            {index === socialIcons.length - 1 && (
+                              <Form.Item>
+                                <Button
+                                  type="primary"
+                                  onClick={handleAddMore}
+                                  block
+                                  className="add-more-button"
+                                >
+                                  <PlusOutlined />
+                                  {/* Add More */}
+                                </Button>
+                              </Form.Item>
+                            )}
+                            {index !== socialIcons.length - 1 && (
+                              <Button
+                                type="primary"
+                                onClick={() => handleRemove(index)}
+                                block
+                                className="remove-button"
+                              >
+                                <DeleteOutlined />
+                              </Button>
+                            )}
+                          </Col>
+                        </React.Fragment>
+                      ))}
+                      <Col span={24}>
+                        <Form.Item>
+                          <Button
+                            style={{ margin: 0 }}
+                            type="primary"
+                            htmlType="submit"
+                          >
+                            Submit
+                          </Button>
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                  </Form>
+                </Col>
+              </Row>
+            )}

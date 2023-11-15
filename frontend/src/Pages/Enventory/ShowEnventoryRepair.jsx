@@ -184,7 +184,7 @@ const ShowEnventoryRepair = () => {
     <div>
       <div className="m12r">
         <Title level={3} className="Expensecolor">
-          Enventory Repair List
+          Inventory Repair List
         </Title>
         <button className="filtercolorbtn">Filter</button>
       </div>

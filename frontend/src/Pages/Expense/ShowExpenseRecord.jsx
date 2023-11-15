@@ -118,7 +118,7 @@ const ShowAvailableItems = () => {
     <div>
       <div className="m12r">
         <Title level={3} className="Expensecolor">
-          Show Expnese Record
+          Show Expenses Record
         </Title>
 
         <Link to={`/add-expense`}>

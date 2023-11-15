@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { CheckCircleOutlined } from "@ant-design/icons";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, SearchOutlined } from "@ant-design/icons";
 import {
   Button,
   Table,
@@ -38,6 +38,8 @@ const CompantAccount = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen1, setIsModalOpen1] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
+
+  
 
   console.log(tableData);
   const showModal = () => {
@@ -101,6 +103,11 @@ const CompantAccount = () => {
             notification_date: new Date(
               x.notification_date
             ).toLocaleDateString(),
+
+            purchase_date: new Date(x.renewal_date).toLocaleDateString(),
+            notification_date: new Date(
+              x.notification_date
+            ).toLocaleDateString(),
             services: x.services,
             client_name: x.client_name,
             username: x.username,
@@ -148,13 +155,16 @@ const CompantAccount = () => {
   const handleAdd = (values) => {
     values.client_id = getclient_id;
     const renewalDate = new Date(values.renewal_date.$d);
+    const purchaseDate = new Date(values.purchase_date.$d);
     const formattedValues = {
       ...values,
-      notification_date: moment(renewalDate)
+      notification_date: moment(renewalDate,purchaseDate)
         .subtract(10, "days")
         .format("YYYY-MM-DD"),
       renewal_date: moment(renewalDate).format("YYYY-MM-DD"),
+      purchase_date: moment(purchaseDate).format("YYYY-MM-DD")
     };
+    // console.log(formattedValues)
     axios
       .post(
         process.env.REACT_APP_API_URL + "/add_companyaccount",
@@ -260,6 +270,7 @@ const CompantAccount = () => {
         handleSendMail(
           record.hosting_name,
           record.hosting_url,
+          record.purchase_date,
           record.renewal_date,
           record.client_name,
           smtpHost,
@@ -271,12 +282,17 @@ const CompantAccount = () => {
         // Mark the email as sent to prevent multiple emails on the same date
         record.emailSent = true;
       }
-    });
+    }
+);
   };
+
+  
 
   useEffect(() => {
     // Run the checkNotificationDate function every minute
     const intervalId = setInterval(checkNotificationDate, 60 * 1000);
+
+    
 
     // Clean up the interval when the component unmounts
     return () => clearInterval(intervalId);
@@ -284,6 +300,7 @@ const CompantAccount = () => {
   const handleSendMail = (
     hosting_name,
     hosting_url,
+    purchase_date,
     renewal_date,
     client_name,
     smtpHost,
@@ -294,6 +311,7 @@ const CompantAccount = () => {
     const data = {
       hosting_name: hosting_name,
       hosting_url: hosting_url,
+      purchase_date: purchase_date,
       renewal_date: renewal_date,
       client_name: client_name,
       smtpHost: smtpHost,
@@ -312,11 +330,122 @@ const CompantAccount = () => {
         console.log(err);
       });
   };
+
+  const [searchText, setSearchText] = useState('');
+  const [searchedColumn, setSearchedColumn] = useState('');
+  const searchInput = useRef(null);
+  const handleSearch1 = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+  const handleReset = (clearFilters) => {
+    clearFilters();
+    setSearchText('');
+  };
+  const getColumnSearchProps = (dataIndex) => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+      <div
+        style={{
+          padding: 8,
+        }}
+        onKeyDown={(e) => e.stopPropagation()}
+      >
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch1(selectedKeys, confirm, dataIndex)}
+          style={{
+            marginBottom: 8,
+            display: 'block',
+          }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch1(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{
+              width: 90,
+            }}
+          >
+            Search
+          </Button>
+          <Button
+            onClick={() => clearFilters && handleReset(clearFilters)}
+            size="small"
+            style={{
+              width: 90,
+            }}
+          >
+            Reset
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              confirm({
+                closeDropdown: false,
+              });
+              setSearchText(selectedKeys[0]);
+              setSearchedColumn(dataIndex);
+            }}
+          >
+            Filter
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              close();
+            }}
+          >
+            close
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered) => (
+      <SearchOutlined
+        style={{
+          color: filtered ? '#1677ff' : undefined,
+        }}
+      />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+    // render: (text) =>
+    //   searchedColumn === dataIndex ? (
+    //     <Highlighter
+    //       highlightStyle={{
+    //         backgroundColor: '#ffc069',
+    //         padding: 0,
+    //       }}
+    //       searchWords={[searchText]}
+    //       autoEscape
+    //       textToHighlight={text ? text.toString() : ''}
+    //     />
+    //   ) : (
+    //     text
+    //   ),
+  });
+
+
+
   const columns = [
     {
       title: "Hosting Name",
       dataIndex: "hosting_name",
       key: "hosting_name",
+      ...getColumnSearchProps('hosting_name'),
       render: (text) => <a>{text}</a>,
     },
 
@@ -324,38 +453,51 @@ const CompantAccount = () => {
       title: "Hosting Url",
       dataIndex: "hosting_url",
       key: "hosting_url",
+      ...getColumnSearchProps('hosting_url')
     },
     {
       title: "Services",
       dataIndex: "services",
       key: "services",
+      ...getColumnSearchProps('services')
     },
 
     {
       title: "Client Name",
       dataIndex: "client_name",
       key: "client_name",
+      ...getColumnSearchProps('client_name')
     },
 
     {
       title: "UserName",
       dataIndex: "username",
       key: "username",
+      ...getColumnSearchProps('username')
     },
     {
       title: "Password",
       dataIndex: "password",
       key: "password",
+      ...getColumnSearchProps('password')
+    },
+    {
+      title: "Purchase Date",
+      dataIndex: "purchase_date",
+      key: "purchase_date",
+      ...getColumnSearchProps('purchase_date')
     },
     {
       title: "Renewal Date",
       dataIndex: "renewal_date",
       key: "renewal_date",
+      ...getColumnSearchProps('renewal_date')
     },
     {
       title: "Notification Date",
       dataIndex: "notification_date",
       key: "notification_date",
+      ...getColumnSearchProps('notification_date')
     },
 
     {
@@ -376,41 +518,42 @@ const CompantAccount = () => {
         </div>
       ),
     },
-    // {
-    //   title: "Send Mail",
-    //   key: "action",
-    //   render: (_, record) => (
-    //     <div>
-    //       <Space wrap>
-    //         <Button
-    //           type="primary"
-    //           block
-    //           onClick={() =>
-    //             handleSendMail(
-    //               record.hosting_name,
-    //               record.hosting_url,
-    //               record.renewal_date,
-    //               record.client_name,
-    //               record.smtpPort,
-    //               record.smtpHort,
-    //               record.smtpUsername,
-    //               record.smtpPassword
-    //             )
-    //           }
-    //         >
-    //           Send Mail
-    //         </Button>
-    //       </Space>
-    //     </div>
-    //   ),
-    // },
+    {
+      title: "Send Mail",
+      key: "action",
+      render: (_, record) => (
+        <div>
+          <Space wrap>
+            <Button
+              type="primary"
+              block
+              onClick={() =>
+                handleSendMail(
+                  record.hosting_name,
+                  record.hosting_url,
+                  record.purchase_date,
+                  record.renewal_date,
+                  record.client_name,
+                  record.smtpPort,
+                  record.smtpHort,
+                  record.smtpUsername,
+                  record.smtpPassword
+                )
+              }
+            >
+              Send Mail
+            </Button>
+          </Space>
+        </div>
+      ),
+    },
   ];
 
   return (
     <div>
       <div className="m12r">
         <Title level={3} className="Expensecolor">
-          Comapny Accounts
+          Company Accounts
         </Title>
         <button className="Expensecolorbtn" onClick={showModal1}>
           Add Account +
@@ -567,6 +710,27 @@ const CompantAccount = () => {
 
                   <Col span={12}>
                     <Form.Item
+                      label="Purchase Date"
+                      name="purchase_date"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please input Purchase Date",
+                        },
+                      ]}
+                      hasFeedback
+                    >
+                      <DatePicker
+                        style={{ width: "100%" }}
+                        disabledDate={(current) =>
+                          current && current < moment().startOf("day")
+                        }
+                      />
+                    </Form.Item>
+                  </Col>
+
+                  <Col span={12}>
+                    <Form.Item
                       label="Renewal Date"
                       name="renewal_date"
                       rules={[
@@ -585,6 +749,7 @@ const CompantAccount = () => {
                       />
                     </Form.Item>
                   </Col>
+
                 </Row>
                 <Col span={24}>
                   <Form.Item>
@@ -757,6 +922,20 @@ const CompantAccount = () => {
                         value={oldnotificationdate}
                         disabled
                         className="sameinput"
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item
+                      label="Purchase Date"
+                      name="purchase_date"
+                      hasFeedback
+                    >
+                      <DatePicker
+                        style={{ width: "100%" }}
+                        disabledDate={(current) =>
+                          current && current < moment().startOf("day")
+                        }
                       />
                     </Form.Item>
                   </Col>

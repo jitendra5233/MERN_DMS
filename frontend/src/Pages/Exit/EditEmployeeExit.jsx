@@ -461,7 +461,6 @@ const EditEmployeeExit = () => {
                   >
                     <Input
                       placeholder="Leaving Date"
-                      disabled
                       className="sameinput"
                     />
                   </Form.Item>
@@ -475,7 +474,6 @@ const EditEmployeeExit = () => {
                   >
                     <Input
                       placeholder="Date of Resignation"
-                      disabled
                       className="sameinput"
                     />
                   </Form.Item>

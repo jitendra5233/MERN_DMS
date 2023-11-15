@@ -33,6 +33,7 @@ const EmployeeKPI = () => {
   const [form2] = Form.useForm();
   const [form3] = Form.useForm();
   const r_prams = useParams();
+  const { id } = useParams();
   const [loading, setLoading] = useState(false);
   const [api, contextHolder] = notification.useNotification();
   let { Option } = Select;
@@ -61,7 +62,7 @@ const EmployeeKPI = () => {
   const onChange = (key) => {
     form3.resetFields();
     setMonths(key);
-    getApiQuestions(EmpId, key);
+    getApiQuestions(id, key);
   };
   const [adminRating, setAdminRating] = useState(0);
   const [employeeRating, setEmployeeRating] = useState(0);
@@ -152,7 +153,7 @@ const EmployeeKPI = () => {
         if (res.data.length != 0) {
           let data = res.data[0];
           data.name = `${data.f_name} ${data.l_name}`;
-          getApiQuestions(data._id);
+          getApiQuestions(data.ref_id);
           form.setFieldsValue(data);
           setEmpName(data.name);
           setEmpDepartment(data.department);
@@ -182,18 +183,20 @@ const EmployeeKPI = () => {
   const handleSaveQUES = (values) => {
     values.months = KpiMonths;
     values.emp_id = EmpId;
-    axios
-      .post(process.env.REACT_APP_API_URL + "/create_KPI", values)
-      .then((res) => {
-        form2.resetFields();
-        message.success("Added");
-        // getDetails();
-        // getApiQuestions();
-        onChange(KpiMonths);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    values.kpiQuestions = values.socialIcons;
+
+    // axios
+    //   .post(process.env.REACT_APP_API_URL + "/create_KPI", values)
+    //   .then((res) => {
+    //     form2.resetFields();
+    //     message.success("Added");
+    //     // getDetails();
+    //     // getApiQuestions();
+    //     onChange(KpiMonths);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
   };
 
   const handleDeleteIcon = (questionId) => {
@@ -218,7 +221,7 @@ const EmployeeKPI = () => {
         `${process.env.REACT_APP_API_URL}/delete_kpi_question/${kpiId}/${questionId}`
       )
       .then((response) => {
-        getApiQuestions(EmpId, KpiMonths);
+        getApiQuestions(id, KpiMonths);
       })
       .catch((error) => {
         console.error(error);
@@ -275,7 +278,7 @@ const EmployeeKPI = () => {
         r_comment: r_comment !== undefined ? r_comment : R_Comment,
         Rating,
         Comment,
-        EmpId,
+        id,
         itemId,
       };
       axios
@@ -283,7 +286,7 @@ const EmployeeKPI = () => {
         .then((res) => {
           console.log("Comment updated:", res.data);
           message.success("Updated");
-          // getApiQuestions(updateId, KpiMonths);
+          getApiQuestions(id, KpiMonths);
         })
         .catch((err) => {
           console.error("Error updating comment:", err);
@@ -292,7 +295,7 @@ const EmployeeKPI = () => {
   };
 
   const handleCompanyValue = (values) => {
-    values.emp_id = EmpId;
+    values.emp_id = id;
     values.months = KpiMonths;
     values.Reviewer_upadate_date = new Date();
     setLoading(true);
@@ -302,7 +305,7 @@ const EmployeeKPI = () => {
         console.log("Comment updated:", res.data);
         setLoading(false);
         message.success("Updated");
-        getApiQuestions(updateId, KpiMonths);
+        getApiQuestions(id, KpiMonths);
       })
       .catch((err) => {
         console.error("Error updating comment:", err);
@@ -319,7 +322,7 @@ const EmployeeKPI = () => {
         console.log("Comment updated:", res.data);
         setLoading(false);
         message.success("Updated");
-        getApiQuestions(updateId, KpiMonths);
+        getApiQuestions(id, KpiMonths);
       })
       .catch((err) => {
         console.error("Error updating comment:", err);
@@ -462,7 +465,6 @@ const EmployeeKPI = () => {
               </div>
             </Row>
             <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
-
             <div
               style={{
                 display: "flex",
@@ -488,86 +490,6 @@ const EmployeeKPI = () => {
                 </select>
               </div>
             </div>
-            {EmpRole == "admin" && (
-              <Row>
-                <Col span={24}>
-                  <Form
-                    form={form2}
-                    name="basic"
-                    layout="vertical"
-                    initialValues={{
-                      remember: true,
-                    }}
-                    onFinish={handleSaveQUES}
-                    onFinishFailed={onFinishFailed}
-                    autoComplete="off"
-                  >
-                    <Row gutter={24}>
-                      {socialIcons.map((item, index) => (
-                        <React.Fragment key={index}>
-                          <Col span={20}>
-                            <Form.Item
-                              label={`Question ${index + 1}`}
-                              name={["socialIcons", index, "qusetion"]}
-                              initialValue={item.social_url}
-                              hasFeedback
-                              rules={[
-                                {
-                                  required: true,
-                                  message: "Please input your qusetion",
-                                },
-                              ]}
-                            >
-                              <TextArea
-                                className="myAntIpt2"
-                                placeholder="Enter Question....."
-                                size="small"
-                              />
-                            </Form.Item>
-                          </Col>
-                          <Col span={4}>
-                            {index === socialIcons.length - 1 && (
-                              <Form.Item>
-                                <Button
-                                  type="primary"
-                                  onClick={handleAddMore}
-                                  block
-                                  className="add-more-button"
-                                >
-                                  <PlusOutlined />
-                                  {/* Add More */}
-                                </Button>
-                              </Form.Item>
-                            )}
-                            {index !== socialIcons.length - 1 && (
-                              <Button
-                                type="primary"
-                                onClick={() => handleRemove(index)}
-                                block
-                                className="remove-button"
-                              >
-                                <DeleteOutlined />
-                              </Button>
-                            )}
-                          </Col>
-                        </React.Fragment>
-                      ))}
-                      <Col span={24}>
-                        <Form.Item>
-                          <Button
-                            style={{ margin: 0 }}
-                            type="primary"
-                            htmlType="submit"
-                          >
-                            Submit
-                          </Button>
-                        </Form.Item>
-                      </Col>
-                    </Row>
-                  </Form>
-                </Col>
-              </Row>
-            )}
 
             <Form name="basic" layout="vertical">
               <Row gutter={[24, 0]}>

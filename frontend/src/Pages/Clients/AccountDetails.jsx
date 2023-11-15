@@ -563,7 +563,7 @@ const AccountDetails = () => {
       key: "designation",
     },
     {
-      title: "Assigned Date",
+      title: "Date of Assignment",
       dataIndex: "assignment_date",
       key: "assignment_date",
     },
@@ -661,7 +661,7 @@ const AccountDetails = () => {
                     <Input disabled />
                   </Form.Item>
                 </Col>
-                <Col span={8}>
+                {/* <Col span={8}>
                   <Form.Item label="Client Id" name="client_id">
                     <Input disabled />
                   </Form.Item>
@@ -670,7 +670,7 @@ const AccountDetails = () => {
                   <Form.Item label="Password" name="password">
                     <Input disabled />
                   </Form.Item>
-                </Col>
+                </Col> */}
 
                 {/* <Col span={24}>
                   <Form.Item>

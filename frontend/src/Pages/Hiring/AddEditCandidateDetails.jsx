@@ -10,6 +10,7 @@ const AddEditCandidateDetails = () => {
   const [empCode, setEmpCode] = useState("");
 
   const [canDetails, setCanDetails] = useState([]);
+  
 
   const [form] = Form.useForm();
   let { Title } = Typography;
@@ -49,6 +50,8 @@ const AddEditCandidateDetails = () => {
           }
 
           setCanDetails(formData);
+          console.log(setCanDetails(formData));
+          // console.log(canDetails);
 
           form.setFieldsValue(formData);
           axios
@@ -181,6 +184,7 @@ const AddEditCandidateDetails = () => {
   };
 
   const onFinish = (values) => {
+    // console.log(values,"value")
     values.ref_id = r_prams.id;
 
     values.department = canDetails.ref_id;
@@ -189,6 +193,7 @@ const AddEditCandidateDetails = () => {
     axios
       .post(process.env.REACT_APP_API_URL + "/addCandidateDetails", values)
       .then((res) => {
+        // console.log(res,"result")
         message.success("Added");
       })
       .catch((err) => {

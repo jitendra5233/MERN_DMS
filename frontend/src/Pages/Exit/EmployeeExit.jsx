@@ -147,7 +147,7 @@ const EmployeeExit = () => {
     <div>
       <div className="m12r">
         <Title level={3} className="Expensecolor">
-          Employee Dtails
+          Employee Details
         </Title>
         <Link to={`/add-employeeexit`}>
           <button className="Expensecolorbtn">Create New Exit +</button>

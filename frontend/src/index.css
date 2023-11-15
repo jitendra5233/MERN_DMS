@@ -721,6 +721,12 @@ li.ant-menu-submenu.ant-menu-submenu-inline {
   margin-top: 34px;
   font-size: 12px;
 }
+
+button.ant-btn.add-more-button {
+  margin-left: 2px;
+  margin-right: 2px;
+}
+
 .remove-size {
   width: 4% !important;
 }
@@ -880,8 +886,109 @@ li.ant-menu-submenu.ant-menu-submenu-inline {
 }
 
 
+.year-select-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.left-select {
+  width: 20%;
+  float: left !important;
+}
+
+.center-select {
+  width: 60%;
+  text-align: center !important;
+}
+
+.right-select {
+  width: 20%;
+  float: right !important;
+}
 
 
 
 
 /* Jitendra New Css End */
+
+
+/*-----  Bus Sheet Resolved  ------*/
+
+#min-max {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+div#showLoss .ant-table-filter-column {
+  width: 132px;
+}
+
+button.ant-btn.notify-btn {
+  background-color: transparent;
+  color: grey;
+  box-shadow: none;
+  font-size: 24px;
+  margin: 10px 0px;
+}
+
+button.ant-btn.notify-btn:hover
+{
+  background-color: transparent !important;
+  color: #0071c5 !important;
+}
+
+.ant-drawer-title {
+  font-size: 20px !important;
+  margin-left: 20px !important;
+}
+
+.ant-drawer-body {
+  padding: 15px 25px !important;
+}
+
+.notify-box h2 {
+  margin-bottom: 8px;
+  color: #1677ff;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.notify-box h2:hover
+{
+  color: #0156cc;
+}
+
+.notify-box .cross {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  cursor: pointer;
+}
+
+.notify-box {
+  /* border-bottom: 2px solid; */
+  padding: 20px 0 ;
+}
+
+.notify-box p {
+  line-height: 18px;
+    font-size: 12px;
+}
+
+.notify-box ul li.list-set {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  align-items:flex-start;
+  list-style: none;
+  margin-bottom: 30px;
+  border: 1px solid #f0f0f0;
+    padding: 20px 15px;
+    box-shadow: 0px 0px 10px #eeeeee;
+}
+
+span.anticon.anticon-close {
+  cursor: pointer;
+}
+/*-----  Bus Sheet Resolved  ------*/

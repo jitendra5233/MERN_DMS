@@ -1,7 +1,7 @@
 import React from "react";
 
 const AnonymousMessage = () => {
-  return <div>AnonymousMessage</div>;
+  return <div>Anonymous Message</div>;
 };
 
 export default AnonymousMessage;

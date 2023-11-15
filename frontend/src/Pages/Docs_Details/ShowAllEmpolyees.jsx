@@ -134,7 +134,7 @@ const EmployeeCard = ({
         </div>
         <div style={{ margin: "20px 0" }}>
           <div>
-            <span className="potionCardTitle" style={{ cursor: "pointer" }}>
+            <span className="potionCardTitle" style={{ cursor: "pointer" }} onClick={() => openPage("/employee-details")}>
               {name}
             </span>
           </div>
@@ -417,7 +417,7 @@ const ShowAllEmpolyees = () => {
                   <Row gutter={24}>
                     <Col span={24} style={{ marginBottom: "10px" }}>
                       <Form.Item
-                        label="Porfile Photo"
+                        label="Profile Photo"
                         valuePropName="fileList"
                         getValueFromEvent={normFile}
                         name="image"
@@ -596,7 +596,7 @@ const ShowAllEmpolyees = () => {
                   id={_id}
                   ref_id={ref_id}
                   img={photo}
-                  name={`${f_name} ${l_name}`}
+                  name={`${f_name} ${l_name}` }
                   designation={designation}
                   getEmployee={() => getEmployee()}
                 />

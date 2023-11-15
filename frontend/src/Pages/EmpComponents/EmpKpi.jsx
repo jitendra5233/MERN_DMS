@@ -57,12 +57,13 @@ const EmpKpi = () => {
   const [ReviewerDate, setReviewerDate] = useState();
   const [Eassesment, setEassesment] = useState("");
   const [Rassesment, setRassesment] = useState("");
-
+  const currentDate = new Date();
+  const currentYears = currentDate.getFullYear();
   const { confirm } = Modal;
 
   useEffect(() => {
     getDetails(selector.employee_id);
-    getApiQuestions();
+    getApiQuestions(selector.employee_id, `January ${currentYears}`);
     setEmpRole(selector.role);
   }, []);
   const onChange = (key) => {
@@ -169,7 +170,7 @@ const EmpKpi = () => {
           form.setFieldsValue(data);
           setEmpName(data.name);
           setEmpDepartment(data.department);
-          setEmpJobTitle(data.designation);
+          setEmpJobTitle(data.job_title);
           setEmpId(data._id);
           setEmployee(data);
         }
@@ -240,7 +241,7 @@ const EmpKpi = () => {
         .then((res) => {
           console.log("Comment updated:", res.data);
           message.success("Updated");
-          getApiQuestions(updateId, KpiMonths);
+          // getApiQuestions(updateId, KpiMonths);
         })
         .catch((err) => {
           console.error("Error updating comment:", err);

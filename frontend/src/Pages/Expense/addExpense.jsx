@@ -109,7 +109,7 @@ const AddExpense = () => {
                 </Col>
                 <Col span={8}>
                   <Form.Item
-                    label="Remaining Paid Amount"
+                    label="Remaining amount to pay"
                     name="r_paidamt"
                     rules={[
                       {
@@ -123,7 +123,7 @@ const AddExpense = () => {
                 </Col>
                 <Col span={8}>
                   <Form.Item
-                    label="Remaining Get Amount"
+                    label="Remaining amount to get"
                     name="r_getamt"
                     rules={[
                       {

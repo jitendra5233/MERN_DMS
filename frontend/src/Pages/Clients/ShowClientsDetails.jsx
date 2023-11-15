@@ -3,6 +3,8 @@ import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { PlusOutlined, MoreOutlined } from "@ant-design/icons";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import {faFacebookF } from '@fortawesome/free-solid-svg-icons';
 import {
   Card,
   Row,
@@ -19,7 +21,9 @@ import {
   Menu,
   Select,
 } from "antd";
-import "@fortawesome/fontawesome-free/css/all.min.css"; // Import Font Awesome CSS
+// import { library, dom } from '@fortawesome/fontawesome-svg-core'
+import "@fortawesome/fontawesome-free/css/all.min.css"; // Import Font Awesome CSS#
+
 
 const { confirm } = Modal;
 let { Option } = Select;
@@ -476,33 +480,24 @@ const ShowClientsDetails = () => {
                           className="myAntIptSelect2"
                         >
                           <Option> Select icon</Option>
-                          <Option value="fa fa-facebook">Facebook</Option>
-                          <Option value="fa fa-instagram">Instagram</Option>
-                          <Option value="fa fa-linkedin">LinkedIn</Option>
-                          <Option value="fa fa-tiktok">TikTok</Option>
-                          <Option value="fa fa-twitch">Twitch</Option>
-                          <Option value="fa fa-twitter">Twitter</Option>
-                          <Option value="fa fa-whatsapp">WhatsApp</Option>
-                          <Option value="fa fa-google">Google</Option>
-                          <Option value="fa fa-google-plus">Google Plus</Option>
-                          <Option value="fa fa-youtube">YouTube</Option>
-                          <Option value="fa fa-youtube-play">
-                            YouTube Play
+                          <Option value="fa-solid fa-facebook">Facebook - </Option>
+                          <Option value="fa-solid fa-star">Instagram - </Option>
+                          <Option value="fa-brands fa-discord">LinkedIn - </Option>
+                          <Option value="fa-solid fa-bomb">TikTok - </Option>
+                          <Option value="fa-regular fa-file">Twitch  -</Option>
+                          <Option value="fa-solid fa-truck-fast">Twitter  -</Option>
+                          <Option value="fa-regular fa-circle-xmark">WhatsApp - </Option>
+                          <Option value="fa-solid fa-pen-nib">Google  -</Option>
+                          <Option value="fa-solid fa-circle-xmark">Google Plus  -</Option>
+                          <Option value="fa-regular fa-envelope">YouTube  - </Option>
+                          <Option value="">
+                            YouTube Play  - 
                           </Option>
-                          <Option value="fa fa-youtube-square">
-                            YouTube Square
-                          </Option>
-                          <Option value="fa fa-pinterest">Pinterest</Option>
-                          <Option value="fa fa-pinterest-p">Pinterest P</Option>
-                          <Option value="fa fa-pinterest-square">
-                            Pinterest Square
-                          </Option>
-                          <Option value="fa fa-github">GitHub</Option>
-                          <Option value="fa fa-gitlab">GitLab</Option>
-                          <Option value="fas fa-phone">Phone</Option>
-                          <Option value="fas fa-phone-square">
-                            Phone Square
-                          </Option>
+                          <Option value="">
+                            YouTube Square  -   </Option>
+                          <Option value="">Pinterest  - </Option>
+                          <Option value="">GitHub  - </Option>
+                          <Option value="">GitLab  - </Option>
                         </Select>
                       </Form.Item>
                     </Col>
@@ -597,8 +592,8 @@ const ShowClientsDetails = () => {
                             message: "Please input Client Image",
                           },
                         ]}
-                      >
-                        <Upload listType="picture-card" maxCount={1}>
+                      > 
+                        <Upload listType="picture-card" accept=".jpg, .jpeg, .png" maxCount={1}>
                           <div>
                             <PlusOutlined />
                             <div
@@ -914,7 +909,7 @@ const ShowClientsDetails = () => {
                           className="myAntIptSelect2"
                         >
                           <Option> Select icon</Option>
-                          <Option value="fa fa-facebook">Facebook</Option>
+                          <Option value="fa fa-facebook">Facebook </Option>
                           <Option value="fa fa-instagram">Instagram</Option>
                           <Option value="fa fa-linkedin">LinkedIn</Option>
                           <Option value="fa fa-tiktok">TikTok</Option>
@@ -1064,7 +1059,12 @@ const ShowClientsDetails = () => {
               </Space>
             </Space>
             <img className="set_img" alt="example" src={x.img} />
-            <p className="client_name">{x.client_name}</p>
+            <p className="client_name">
+               <Link to={`/account-details/${x._id}`}>
+                          {/* <a rel="noopener noreferrer">View Details</a> */}
+                        {x.client_name}
+                        </Link>
+                        </p>
             <p className="client-designation">{x.client_designation}</p>
             <p className="project-name">{x.project_name}</p>
             {getSocialAcountdata.map((y) => {

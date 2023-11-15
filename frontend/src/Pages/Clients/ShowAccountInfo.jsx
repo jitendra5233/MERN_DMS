@@ -70,7 +70,7 @@ const ShowAccountInfo = () => {
       key: "job_title",
     },
     {
-      title: "Assigned Date",
+      title: "Date of Assignment",
       dataIndex: "assignment_date",
       key: "assignment_date",
     },

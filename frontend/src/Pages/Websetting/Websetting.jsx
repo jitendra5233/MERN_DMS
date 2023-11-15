@@ -370,7 +370,7 @@ const HomeSettings = () => {
 
               {socialIcons.map((item, index) => (
                 <React.Fragment key={index}>
-                  <Col span={11}>
+                  <Col span={10}>
                     <Form.Item
                       label={`Social Icon ${index + 1}`}
                       name={["socialIcons", index, "icon_name"]}
@@ -407,7 +407,7 @@ const HomeSettings = () => {
                       </Select>
                     </Form.Item>
                   </Col>
-                  <Col span={11}>
+                  <Col span={10}>
                     <Form.Item
                       label={`Social URL ${index + 1}`}
                       name={["socialIcons", index, "social_url"]}
@@ -421,7 +421,7 @@ const HomeSettings = () => {
                       />
                     </Form.Item>
                   </Col>
-                  <Col span={2}>
+                  <Col span={4}>
                     {index === socialIcons.length - 1 && (
                       <Form.Item>
                         <Button

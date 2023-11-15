@@ -167,12 +167,12 @@ const ShowExpense = () => {
     },
 
     {
-      title: "Reamaning amount to pay",
+      title: "Remaining amount to pay",
       dataIndex: "r_paidamt",
       key: "r_paidamt",
     },
     {
-      title: "Reamaning amount to get",
+      title: "Remaining amount to get",
       dataIndex: "r_getamt",
       key: "r_getamt",
     },

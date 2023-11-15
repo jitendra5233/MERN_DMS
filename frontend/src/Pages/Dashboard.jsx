@@ -36,6 +36,10 @@ const CardComp = ({
             percent: 60,
           }}
         />
+        <div id="min-max">
+          <span className="min">0%</span>
+          <span className="max">100%</span>
+        </div>
       </div>
       <div
         style={{
@@ -225,7 +229,7 @@ export const Dashboard = () => {
       .then((result) => {
         let data = result.data;
 
-        setTotalClient(data.totalClient);
+        setTotalClient(data.newClient + data.oldClient);
         setNewClient(data.newClient);
         setOldClient(data.oldClient);
         setNewClientPer(data.newClientPer + "%");

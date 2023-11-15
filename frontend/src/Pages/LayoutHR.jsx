@@ -332,7 +332,7 @@ const LayoutEmp = () => {
                 <Link to="/issued">Inventory Details</Link>
               </Menu.Item>
               <Menu.Item key="6">
-                <Link to="/loss_Damage">Lost/dameged</Link>
+                <Link to="/loss_Damage"> Lost/Damaged </Link>
               </Menu.Item>
             </SubMenu>
             <SubMenu
@@ -356,6 +356,9 @@ const LayoutEmp = () => {
               </Menu.Item>
               <Menu.Item key="8">
                 <Link to="/show-old-employee">Old Employees</Link>
+              </Menu.Item>
+              <Menu.Item key="93">
+                <Link to="/assign_kpi">Assign Questionnaire (KPI)</Link>
               </Menu.Item>
             </SubMenu>
             <SubMenu

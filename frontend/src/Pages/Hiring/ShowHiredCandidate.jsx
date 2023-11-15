@@ -6,6 +6,7 @@ import {
   Row,
   Col,
   Avatar,
+  Space,
   Form,
   Input,
   Select,
@@ -15,9 +16,10 @@ import {
   Dropdown,
   message,
 } from "antd";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import {
+  SearchOutlined,
   DeleteOutlined,
   DownloadOutlined,
   EditOutlined,
@@ -78,6 +80,115 @@ const ShowHiredCandidate = () => {
     // getRoles();
   }, []);
 
+  const [searchText, setSearchText] = useState('');
+  const [searchedColumn, setSearchedColumn] = useState('');
+  const searchInput = useRef(null);
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+  const handleReset = (clearFilters) => {
+    clearFilters();
+    setSearchText('');
+  };
+
+
+  const getColumnSearchProps = (dataIndex) => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+      <div
+        style={{
+          padding: 8,
+        }}
+        onKeyDown={(e) => e.stopPropagation()}
+      >
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{
+            marginBottom: 8,
+            display: 'block',
+          }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{
+              width: 90,
+            }}
+          >
+            Search
+          </Button>
+          <Button
+            onClick={() => clearFilters && handleReset(clearFilters)}
+            size="small"
+            style={{
+              width: 90,
+            }}
+          >
+            Reset
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              confirm({
+                closeDropdown: false,
+              });
+              setSearchText(selectedKeys[0]);
+              setSearchedColumn(dataIndex);
+            }}
+          >
+            Filter
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              close();
+            }}
+          >
+            close
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered) => (
+      <SearchOutlined
+        style={{
+          color: filtered ? '#1677ff' : undefined,
+        }}
+      />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+    // render: (text) =>
+    //   searchedColumn === dataIndex ? (
+    //     <Highlighter
+    //       highlightStyle={{
+    //         backgroundColor: '#ffc069',
+    //         padding: 0,
+    //       }}
+    //       searchWords={[searchText]}
+    //       autoEscape
+    //       textToHighlight={text ? text.toString() : ''}
+    //     />
+    //   ) : (
+    //     text
+    //   ),
+  });
+
   const items = [
     {
       key: "1",
@@ -102,31 +213,37 @@ const ShowHiredCandidate = () => {
       title: "Name",
       dataIndex: "name",
       key: "name",
+      ...getColumnSearchProps('name'),
     },
     {
       title: "Email",
       dataIndex: "emailid",
       key: "emailid",
+      ...getColumnSearchProps('emailid'),
     },
     {
       title: "Last Salary",
       dataIndex: "last_salary",
       key: "last_salary",
+      ...getColumnSearchProps('last_salary'),
     },
     {
       title: "Experience",
       dataIndex: "experience",
       key: "experience",
+      ...getColumnSearchProps('experience'),
     },
     {
       title: "Expected Salary",
       dataIndex: "expected_salary",
       key: "expected_salary",
+      ...getColumnSearchProps('expected_salary'),
     },
     {
       title: "Location",
       dataIndex: "location",
       key: "location",
+      ...getColumnSearchProps('location'),
     },
     {
       title: "CV",
@@ -190,6 +307,7 @@ const ShowHiredCandidate = () => {
       }
     });
     showModal();
+    // console.log(tableData);
   };
 
   const getTotalNoOfEmp = () => {
@@ -274,6 +392,7 @@ const ShowHiredCandidate = () => {
         });
 
         setTableData(newData);
+        // console.log(data);
       })
       .catch((err) => {
         console.log(err);
@@ -283,59 +402,64 @@ const ShowHiredCandidate = () => {
   let { Title } = Typography;
 
   const handleSubmit = (values) => {
-    console.log(values);
-    // if (activeId == "") {
-    //   setLoading(true);
+    // console.log(values);
+    /*----- */
+    if (activeId == "") {
+      setLoading(true);
 
-    //   let data = new FormData();
-    //   data.append("email", values.email);
-    //   data.append("emp_code", values.emp_code);
-    //   data.append("f_name", values.f_name);
-    //   data.append("l_name", values.l_name);
-    //   data.append("image", "image");
-    //   data.append("job_title", values.job_title);
-    //   data.append("password", values.password);
+     let data = new FormData();
+    console.log(data,'datadaaaaaa')
+      data.append("email", values.email);
+      data.append("emp_code", values.emp_code);
+      data.append("f_name", values.f_name);
+      data.append("l_name", values.l_name);
+      data.append("image", "image");
+      data.append("job_title", values.job_title);
+      data.append("password", values.password);
 
-    //   axios
-    //     .post(process.env.REACT_APP_API_URL + "/create_User", values)
-    //     .then((res) => {
-    //       console.log(res.data);
-    //       // setLoading(false);
-    //       // if (res.data.length === 0) {
-    //       //   openNotificationWithIcon("error");
-    //       // } else {
-    //       //   openNotificationWithIcon("success");
-    //       //   dispatch(handleLogin({ name: "harman" }));
-    //       //   getUsers();
-    //       //   form.resetFields();
-    //       //   setIsModalOpen(false);
-    //       // }
-    //     })
-    //     .catch((err) => {
-    //       setLoading(false);
-    //       console.log(err);
-    //     });
-    // } else {
-    //   console.log(values);
-    //   values.id = activeId;
-    //   axios
-    //     .post(process.env.REACT_APP_API_URL + "/update_User", values)
-    //     .then((res) => {
-    //       setLoading(false);
-    //       if (res.data.length === 0) {
-    //         openNotificationWithIcon("error");
-    //       } else {
-    //         openNotificationWithIcon("success");
-    //         dispatch(handleLogin({ name: "harman" }));
-    //         getUsers();
-    //         setIsModalOpen(false);
-    //       }
-    //     })
-    //     .catch((err) => {
-    //       setLoading(false);
-    //       console.log(err);
-    //     });
-    // }
+      axios
+        .post(process.env.REACT_APP_API_URL + "/create_User", values)
+        .then((res) => {
+          console.log(res.data,"create user respobse");
+          // setLoading(false);
+          // if (res.data.length === 0) {
+          //   openNotificationWithIcon("error");
+          // } else {
+          //   openNotificationWithIcon("success");
+          //   dispatch(handleLogin({ name: "harman" }));
+          //   getUsers();
+          //   form.resetFields();
+          //   setIsModalOpen(false);
+          // }
+        })
+        .catch((err) => {
+          setLoading(false);
+          console.log(err);
+        });
+    } else {
+      console.log(values);
+      // values.id = activeId;
+      // axios
+      //   .post(process.env.REACT_APP_API_URL + "/update_User", values)
+      //   .then((res) => {
+      // console.log(res, "update result");
+      //     setLoading(false);
+      //     if (res.data.length === 0) {
+      //       openNotificationWithIcon("error");
+      //     } else {
+      //       openNotificationWithIcon("success");
+      //       dispatch(handleLogin({ name: "harman" }));
+      //       getUsers();
+      //       setIsModalOpen(false);
+      //     }
+      //   })
+      //   .catch((err) => {
+      //     setLoading(false);
+      //     console.log(err);
+      //   });
+    }
+
+    /*----- */
   };
 
   const onFinishFailed = (errorInfo) => {
