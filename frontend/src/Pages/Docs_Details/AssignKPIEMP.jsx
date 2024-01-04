@@ -44,7 +44,7 @@ const AssignKPIEMP = () => {
   const [EmpJobTitle, setEmpJobTitle] = useState("");
   const [EmpId, setEmpId] = useState("");
   const [KpiMonths, setMonths] = useState("");
-  const [selectedYear, setSelectedYear] = useState("2023");
+  const [selectedYear, setSelectedYear] = useState("2024");
   const [selectedDepartment, setSelectedDepartment] = useState("");
   const [selectedDepartmentId, setSelectedDepartmentID] = useState("");
   const [EmployeeData, SetEmployeeData] = useState([]);

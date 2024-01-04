@@ -48,7 +48,7 @@ const EmpKpi = () => {
   const [EmpId, setEmpId] = useState("");
   const [KpiMonths, setMonths] = useState("");
   const [form3] = Form.useForm();
-  const [selectedYear, setSelectedYear] = useState("2023");
+  const [selectedYear, setSelectedYear] = useState("2024");
   const currentYear = new Date().getFullYear();
   const [updateId, setUpdateId] = useState(null);
   const [accountData, setAccountData] = useState([]);
