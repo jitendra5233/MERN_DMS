@@ -75,6 +75,17 @@ mongoose
   })
   .catch((err) => console.log(err));
 
+app.use(express.static("public"));
+app.use(express.static("files"));
+
+app.use("/", express.static("build"));
+app.use("/images", express.static("images"));
+app.use("/testingImages", express.static("testingImages"));
+
+app.get("/", (req, res) => {
+  res.sendFile(__dirname + "/dist/" + "index.html");
+});
+
 app.post("/login", async (req, res) => {
   try {
     const users = await Users.find({
